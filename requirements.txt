@@ -2,5 +2,4 @@ pandas
 matplotlib
 numpy
 pytest
-test_code
 # Add other dependencies as needed

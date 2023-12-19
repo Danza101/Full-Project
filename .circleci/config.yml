@@ -1,5 +1,3 @@
-version: 2.1
-
 jobs:
   build:
     working_directory: ~/circleci-python
@@ -16,7 +14,7 @@ jobs:
     docker:
       - image: "cimg/python:3.12.1"
     steps:
-    - checkout
+      - checkout
       - run:
           name: Install Dependencies
           command: pip install -r requirements.txt
