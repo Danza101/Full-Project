@@ -24,7 +24,7 @@ jobs:
           name: Run Tests
           command: |
             mkdir test-results  # Create a directory for test results
-            pytest C:/Users/Boomw/Documents/PWC documents/Year 2 Modules/Professionan_Programming_full_Module/Assessment/Coding_and_test_suite/test_code/--junitxml=test-results/junit.xml  # Update with your test command
+            pytest C:/Users/Boomw/Documents/PWC_documents/Year_2_Modules/Professionan_Programming_full_Module/Assessment/Coding_and_test_suite/test_code/--junitxml=test-results/junit.xml  # Update with your test command
       - store_test_results:
           path: test-results
       - store_artifacts:  # Optional: store test result artifacts
