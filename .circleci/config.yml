@@ -2,11 +2,11 @@ version: 2.1
 
 jobs:
   build:
-    working_directory: ~/circleci-python
     docker:
-      - image: "cimg/python:3.12.1"
+      - image: cimg/python:3.12.1
     steps:
       - checkout
+      - run: python --version
       - run: python3 assessment_code.py
   test:
     working_directory: ~/circleci-python
