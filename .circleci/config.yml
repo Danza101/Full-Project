@@ -7,7 +7,7 @@ jobs:
       - image: cimg/python:3.12.1-node
     steps:
       - checkout
-      - run: python3 code.py
+      - run: python3 assessment_code.py
   test:
     working_directory: ~/circleci-python
     docker:
