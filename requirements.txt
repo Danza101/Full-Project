@@ -1,4 +1,5 @@
 pandas
 matplotlib
 numpy
+pytest
 # Add other dependencies as needed
