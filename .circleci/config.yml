@@ -11,19 +11,13 @@ jobs:
           name: Install Dependencies
           command: pip install -r requirements.txt
       - run: python3 assessment_code.py
-
   test:
     working_directory: ~/circleci-python
     docker:
       - image: "cimg/python:3.12.1"
     steps:
       - checkout
-      - run:
-          name: Install Dependencies
-          command: pip install -r requirements.txt
-      - run:
-          name: Run Tests
-          command: python3 -m unittest discover -s tests  # Update this line as needed
+      - run: python3 main-test.py
 
 workflows:
   build_and_test:
