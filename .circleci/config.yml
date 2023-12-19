@@ -25,4 +25,6 @@ workflows:
   build_and_test:
     jobs:
       - build
-      # - other jobs if you have them
+      - test:
+          requires:
+            - build
