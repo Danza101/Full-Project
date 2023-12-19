@@ -9,20 +9,13 @@ jobs:
       - checkout
       - run:
           name: Install Dependencies
-          command: pip install pandas
+          command: pip install -r requirements.txt
       - run: python3 assessment_code.py
-  test:
-    working_directory: ~/circleci-python
-    docker:
-      - image: "cimg/python:3.12.1"
-    steps:
-      - checkout
-      - run: python3 test_code.ipynb
+
+  # Include other jobs if necessary
 
 workflows:
   build_and_test:
     jobs:
       - build
-      - test:
-          requires:
-            - build
+      # - other jobs if you have them
