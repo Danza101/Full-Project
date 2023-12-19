@@ -17,9 +17,19 @@ jobs:
       - image: "cimg/python:3.12.1"
     steps:
       - checkout
-      - run: python3 test_code.ipynb
-
-  # Include other jobs if necessary
+      - run:
+          name: Install Dependencies
+          command: pip install -r requirements.txt
+      - run:
+          name: Run Tests
+          command: |
+            mkdir test-results  # Create a directory for test results
+            pytest --junitxml=test-results/junit.xml  # Update with your test command
+      - store_test_results:
+          path: test-results
+      - store_artifacts:  # Optional: store test result artifacts
+          path: test-results
+          destination: test-results
 
 workflows:
   build_and_test:
