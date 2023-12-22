@@ -2,5 +2,4 @@ pandas
 matplotlib
 numpy
 pytest
-random
 # Add other dependencies as needed

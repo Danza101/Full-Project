@@ -17,5 +17,4 @@ unemployment = data["Unemployment_Rate"].astype(float)  # This should be a Serie
 
 plt.bar(country[:10], unemployment[:10])  # Using a bar chart for categorical x-axis data.
 plt.xticks(range(len(country[:10])), country[:10], rotation='vertical')
-plt.xticks(range(len(country[:10])), country[:10], rotation='vertical')
 plt.show()  # To display the plot.
