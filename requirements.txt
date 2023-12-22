@@ -1,4 +1,5 @@
 pandas
+matplotlib.pyplot
 matplotlib
 numpy
 pytest
