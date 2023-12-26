@@ -30,6 +30,17 @@ country = data["Countries and areas"]  # This should be a Series or list of coun
 unemployment = data["Unemployment_Rate"].astype(float)  # This should be a Series of floats.
 continents = (country.apply(converting_country_to_continent)) #This gets the continents for each country
 
+#Merging the continent and the unemployment rrate to one dataframe
+continent_Unemployment_merged = pd.concat([continents , unemployment] , axis = 1) 
+
+# Ensure the merged DataFrame has appropriate column names
+continent_Unemployment_merged.columns = ['Continent', 'Unemployment_Rate']
+
+# Grouping the data by the 'Continent' column
+grouped_data = continent_Unemployment_merged.groupby('Continent')
+
+# Calculating the mean unemployment rate per continent
+mean_unemployment_per_continent = grouped_data.mean()
 
 
 
