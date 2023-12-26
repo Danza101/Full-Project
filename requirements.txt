@@ -2,4 +2,6 @@ pandas
 matplotlib
 numpy
 pytest
+geopandas
+pycountry_convert
 # Add other dependencies as needed

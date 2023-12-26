@@ -1,20 +1,35 @@
 #These are all the modules i plan on using in the development
+import pycountry_convert as pc
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import geopandas as gp
+
+def converting_country_to_continent(country_name):
+    try:
+        country_alpha2 = pc.country_name_to_country_alpha2(country_name)
+        country_continent_code = pc.country_alpha2_to_continent_code(country_alpha2)
+        country_continent_name = pc.convert_continent_code_to_continent_name(country_continent_code)
+    except KeyError:
+        if(country_name == "The Bahamas"):
+            country_continent_name = 'North America'
+        if(country_name == "Vatican City"):  
+            country_continent_name = 'Europe'
+        if(country_name == "Timor"):  
+            country_continent_name = 'Asia'
+
+    return country_continent_name
+    
+    
 
 #First i get the data
 data = pd.read_csv("Global_Education.csv" , encoding='ISO-8859-1')
 
-#The data is all about school attendance by student group and district from the last couple years
-#The sata comes from Data.gov which suggests to me that the data is reliably sourced because it came from a government based website
-#From this data the best thing i will be able to study would be how different levels of education affect the likelyhood of getting
-#a job depending on the country
-
 # Assuming 'data' is a pandas DataFrame with the correct columns.
 country = data["Countries and areas"]  # This should be a Series or list of country names.
 unemployment = data["Unemployment_Rate"].astype(float)  # This should be a Series of floats.
+continents = (country.apply(converting_country_to_continent)) #This gets the continents for each country
 
-plt.bar(country[:10], unemployment[:10])  # Using a bar chart for categorical x-axis data.
-plt.xticks(range(len(country[:10])), country[:10], rotation='vertical')
-plt.show()  # To display the plot.
+
+
+
