@@ -3,6 +3,7 @@ matplotlib
 numpy
 pytest
 geopandas
+contextily
 pycountry_convert
 a-world-of-countries==1.0.0
 # Add other dependencies as needed
