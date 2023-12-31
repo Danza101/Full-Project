@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import warnings
 import geopandas as gpd
-import cartopy.crs as ccrs
 import contextily as ctx
  
 def converting_country_to_continent(country_name):

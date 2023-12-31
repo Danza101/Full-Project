@@ -4,6 +4,5 @@ numpy
 pytest
 geopandas
 pycountry_convert
-cartopy
 a-world-of-countries==1.0.0
 # Add other dependencies as needed
