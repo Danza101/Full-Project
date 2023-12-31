@@ -25,7 +25,7 @@ def getting_the_data_from_assessment_code():
         world_map = ac.getting_the_world_map(plot_data=False)
 
         # Call the instance method and capture its returned data
-        country, unemployment, continents , data = world_map.getting_the_data()
+        country, unemployment, continents , data = ac.getting_the_data()
         
         return country , unemployment , continents , data
     except Exception as e:
