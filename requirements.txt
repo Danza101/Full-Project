@@ -4,4 +4,7 @@ numpy
 pytest
 geopandas
 pycountry_convert
+warnings
+cartopy
+awoc
 # Add other dependencies as needed
