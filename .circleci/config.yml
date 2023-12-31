@@ -8,6 +8,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Upgrade pip and build tools
+          command: |
+            pip install --upgrade pip setuptools wheel
+      - run:
           name: Install Dependencies
           command: pip install -r requirements.txt
       - run: python3 assessment_code.py
@@ -17,6 +21,10 @@ jobs:
       - image: "cimg/python:3.8.0"
     steps:
       - checkout
+      - run:
+          name: Upgrade pip and build tools
+          command: |
+            pip install --upgrade pip setuptools wheel
       - run:
           name: Install Dependencies
           command: pip install -r requirements.txt
