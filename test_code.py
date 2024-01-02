@@ -4,6 +4,62 @@ import awoc
 import unittest as test
 import assessment_code as ac
 
+
+#Checks the dictionary produces the correct ans
+def testing_manipulating_data_func_in_ac_file(test_ans , actual_ans):
+    if(test_ans == actual_ans):
+        return True
+    else:
+        return False
+    
+def test_calc(proxy_file_df):
+    oos_rate_instance = ac.OOSRate(False)
+    countries = proxy_file_df["Country"]
+    MaleOOS = proxy_file_df["Male (%)"].str.rstrip('%').astype(float)
+    FemaleOOS = proxy_file_df["Female (%)"].str.rstrip('%').astype(float)
+
+    # Create a list to store the continent for each country
+    continents = [ac.converting_country_to_continent(country) for country in countries]
+    
+    # Convert the list to a pandas Series
+    continents_series = pd.Series(continents)
+
+    # Now call the manipulate_data method on this instance
+    result = oos_rate_instance.manipulate_data(continents_series, MaleOOS, FemaleOOS, "neither")
+        
+    # Iterate over country names in the proxy_file
+    for country_name in proxy_file_df['Country']:
+        proxy_continent = ac.converting_country_to_continent(country_name)
+    
+    answer = {'Africa': 51.6375, 'Asia': 65.58166666666666, 'Europe': 56.34400000000001, 'North America': 64.215, 'Oceania': 93.055, 'South America': 54.379999999999995}
+    
+    return(result == answer)  
+
+
+
+
+#Generating a 2d array mant to act as a proxy file for my testing
+def getting_the_proxy_file():
+    proxy_data = [
+    ["Country", "Male (%)", "Female (%)", "Unemployment_Rate"],
+    ["United States", "91.51%", "78.48%", 8.95],
+    ["Canada", "53.92%", "29.56%", 5.67],
+    ["Brazil", "48.16%", "60.60%", 3.69],
+    ["Togo", "57.12%", "10.88%", 2.32],
+    ["Germany", "53.14%", "77.27%", 9.46],
+    ["France", "92.44%", "85.72%", 3.39],
+    ["Italy", "70.18%", "10.28%", 7.73],
+    ["Spain", "41.65%", "73.26%", 7.99],
+    ["Japan", "27.61%", "61.82%", 2.23],
+    ["China", "97.04%", "45.91%", 6.12],
+    ["India", "94.91%", "66.20%", 1.29],
+    ["Australia", "97.59%", "88.52%", 2.12],
+    ["Russia", "29.80%", "29.70%", 7.02],
+    ["Mexico", "37.75%", "94.07%", 6.88],
+    ["Zimbabwe", "58.30%", "80.25%", 7.23]
+]
+    return proxy_data
+    
 def checking_the_continent(country):
     my_world = awoc.AWOC()
     continent_names = ['Europe', 'Africa', 'Oceania', 'North America', 'South America']
@@ -18,7 +74,7 @@ def checking_the_continent(country):
     # Find the continent for the given country
     return continent_dict.get(country, "Unknown")
 
-def getting_the_data_from_assessment_code():
+def getting_the_data_from_assessment_code_file():
     
     try:
         # Create an instance of the class
@@ -88,12 +144,12 @@ class Test_Imports(test.TestCase):
     
     def setUp(self):
         # Common setup for each test method in this class
-        self.country, self.unemployment, self.continents, self.data = getting_the_data_from_assessment_code()
+        self.country, self.unemployment, self.continents, self.data = getting_the_data_from_assessment_code_file()
         
     #calls method to check the data is good 
     def test_data_import(self):
         data_checker = pd.read_csv("Global_Education.csv", encoding='ISO-8859-1')
-        self.assertEqual(test_data_function(data , data_checker) , True)
+        self.assertEqual(test_data_function(self.data , data_checker) , True)
         
     def test_modules_imports(self):
         #This code tests that pandas, matplotlib and numpy has been downloaded properlly
@@ -104,18 +160,24 @@ class TestGraphs(test.TestCase):
 
     def setUp(self):
         # Common setup for each test method in this class
-        self.country, self.unemployment, self.continents, self.data = getting_the_data_from_assessment_code()
+        self.country, self.unemployment, self.continents, self.data = getting_the_data_from_assessment_code_file()
+        self.proxy_file = getting_the_proxy_file()
+
+    def test_correct_calculations(self):
+        proxy_file_df = pd.DataFrame(self.proxy_file[1:], columns=self.proxy_file[0])
+        self.assertEqual(True, test_calc(proxy_file_df))
+
 
     def test_correct_continent(self):
-        # When testing, suppress plotting
-        data_checker = pd.read_csv("Global_Education.csv", encoding='ISO-8859-1')["Countries and areas"]
-        self.assertEqual(True , checking_correct_continent(country , continents , data_checker))
+        proxy_file_df = pd.DataFrame(self.proxy_file[1:], columns=self.proxy_file[0])  # Convert to DataFrame if it's a list
+        self.assertEqual(True, test_calc(proxy_file_df))
+
+
+
+        
         
 
 
 if __name__ == '__main__':
-    #Getting the requires data i need from my assessment code file
-    country , unemployment, continents , data = getting_the_data_from_assessment_code()
-    
     #Checking the continent
     test.main()

@@ -14,7 +14,7 @@ def get_world_map():
     unemployment_dict = world_map.manipulating_the_data(continents, unemployment)  # 'self' is passed implicitly
     world_map.printing_the_data(unemployment_dict) 
     
-def drawing_OOSR_by_age(age_group, column_index, age_group_name):
+def drawing_OOSR_by_age(column_index, age_group_name):
     oosr_instance = OOSRate(plot_data=True)  # Create an instance of OOSRate
 
     # Retrieve data using the get_data method with the specified column index
@@ -48,19 +48,21 @@ def getting_the_data():
     return country , unemployment , continents , data
     
 def converting_country_to_continent(country_name):
+    country_continent_name = "Unknown"  # Initialize with a default value
     try:
         country_alpha2 = pc.country_name_to_country_alpha2(country_name)
         country_continent_code = pc.country_alpha2_to_continent_code(country_alpha2)
         country_continent_name = pc.convert_continent_code_to_continent_name(country_continent_code)
     except KeyError:
-        if(country_name == "The Bahamas"):
+        if country_name == "The Bahamas":
             country_continent_name = 'North America'
-        if(country_name == "Vatican City"):  
+        elif country_name == "Vatican City":  
             country_continent_name = 'Europe'
-        if(country_name == "Timor"):  
+        elif country_name == "Timor":  
             country_continent_name = 'Asia'
 
     return country_continent_name
+
 
 class getting_the_world_map():
     
@@ -172,7 +174,7 @@ if __name__ == "__main__":
     get_world_map()
     
     # Now, you can call the function with specific parameters for each age group
-    drawing_OOSR_by_age("Primary Age", 5, "aged 5-11")
-    drawing_OOSR_by_age("Lower Secondary Age", 7, "aged 12-14")
-    drawing_OOSR_by_age("Upper Secondary Age", 9, "aged 16-19")
+    drawing_OOSR_by_age(5, "aged 5-11")
+    drawing_OOSR_by_age(7, "aged 12-14")
+    drawing_OOSR_by_age(9, "aged 16-19")
 
