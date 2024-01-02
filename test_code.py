@@ -26,10 +26,6 @@ def test_calc(proxy_file_df):
 
     # Now call the manipulate_data method on this instance
     result = oos_rate_instance.manipulate_data(continents_series, MaleOOS, FemaleOOS, "neither")
-        
-    # Iterate over country names in the proxy_file
-    for country_name in proxy_file_df['Country']:
-        proxy_continent = ac.converting_country_to_continent(country_name)
     
     answer = {'Africa': 51.6375, 'Asia': 65.58166666666666, 'Europe': 56.34400000000001, 'North America': 64.215, 'Oceania': 93.055, 'South America': 54.379999999999995}
     
