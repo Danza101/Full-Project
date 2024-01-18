@@ -7,10 +7,15 @@ import warnings
 import geopandas as gpd
 import contextily as ctx
 
+def highest_and_lowest_unemployment_rates():
+    rate_extractor = countries_unemployment_rate(plot_data=True)
+    extreme_unemployment_df = rate_extractor.get_extreme_unemployment_by_continent()
+    rate_extractor.plot_extreme_unemployment_by_continent()
+    
 #This is the method i used to get the world map
 def get_world_map():
     world_map = getting_the_world_map(plot_data=True)
-    country, unemployment, continents , data = getting_the_data()  # 'self' is passed implicitly
+    country, unemployment, continents , data = getting_the_data() 
     unemployment_dict = world_map.manipulating_the_data(continents, unemployment)  # 'self' is passed implicitly
     world_map.printing_the_data(unemployment_dict) 
     
@@ -168,13 +173,94 @@ class OOSRate:
         plt.tight_layout()  # Adjust layout
         plt.show()
 
+class countries_unemployment_rate:
+    def __init__(self, plot_data):
+        self.plot_data = plot_data
+        self.country, self.unemployment, self.continents, self.data = getting_the_data()
+        self.data['Continent'] = self.continents  # assuming 'self.continents' is a Series from 'getting_the_data()'
+
+    def get_extreme_unemployment_by_continent(self):
+        # Check if the necessary columns are present
+        if 'Continent' not in self.data.columns or 'Unemployment_Rate' not in self.data.columns:
+            raise ValueError("Dataframe must contain 'Continent' and 'Unemployment_Rate' columns")
+
+        # Group by 'Continent' and get the index of the max and min 'Unemployment_Rate' in each group
+        idx_max = self.data.groupby('Continent')['Unemployment_Rate'].idxmax()
+        idx_min = self.data.groupby('Continent')['Unemployment_Rate'].idxmin()
+
+        # Retrieve the rows for max and min unemployment rates
+        max_unemployment_countries = self.data.loc[idx_max, ['Continent', 'Countries and areas', 'Unemployment_Rate']]
+        min_unemployment_countries = self.data.loc[idx_min, ['Continent', 'Countries and areas', 'Unemployment_Rate']]
+
+        # Rename columns for clarity
+        max_unemployment_countries.rename(columns={'Countries and areas': 'Country', 'Unemployment_Rate': 'Max Unemployment Rate'}, inplace=True)
+        min_unemployment_countries.rename(columns={'Countries and areas': 'Country', 'Unemployment_Rate': 'Min Unemployment Rate'}, inplace=True)
+
+        # Merge the results into a single DataFrame for output
+        extreme_unemployment = pd.merge(
+            max_unemployment_countries.reset_index(drop=True), 
+            min_unemployment_countries.reset_index(drop=True), 
+            on='Continent', 
+            suffixes=('_Max', '_Min')
+        )
+
+        return extreme_unemployment
+    
+    def plot_extreme_unemployment_by_continent(self):
+        
+        if(self.plot_data == True):
+             extreme_unemployment = self.get_extreme_unemployment_by_continent()
+
+        # Get unique list of continents
+        continents = extreme_unemployment['Continent'].unique()
+
+        # Loop through continents and plot each one separately
+        for continent in continents:
+            # Filter data for the current continent
+            data = extreme_unemployment[extreme_unemployment['Continent'] == continent]
+
+            # Create a new figure for each continent
+            plt.figure(figsize=(8, 4))
+
+            if data.iloc[0]['Min Unemployment Rate'] == 0:
+                # If min unemployment rate is 0, plot only the max
+                labels = ['Max Unemployment Country']
+                max_country = data.iloc[0]['Country_Max']
+                max_value = data.iloc[0]['Max Unemployment Rate']
+                values = [max_value]
+                color = ['red']
+                tick_label = [max_country]
+            else:
+                # Else plot both max and min
+                labels = ['Max Unemployment Country', 'Min Unemployment Country']
+                max_country = data.iloc[0]['Country_Max']
+                min_country = data.iloc[0]['Country_Min']
+                max_value = data.iloc[0]['Max Unemployment Rate']
+                min_value = data.iloc[0]['Min Unemployment Rate']
+                values = [max_value, min_value]
+                color = ['red', 'green']
+                tick_label = [max_country, min_country]
+
+            # Plot the bar chart
+            plt.bar(labels, values, color=color, tick_label=tick_label)
+            plt.title(f"{continent} - Unemployment Rates")
+            plt.ylabel("Unemployment Rate (%)")
+            plt.ylim(0, max(values) + 5)  # Set y-axis limit to add some space at the top
+
+            # Display each plot
+            plt.show()
+
+
+        
 if __name__ == "__main__":
 
     #First graph of the world map
-    get_world_map()
+    #get_world_map()
     
     # Now, you can call the function with specific parameters for each age group
-    drawing_OOSR_by_age(5, "aged 5-11")
-    drawing_OOSR_by_age(7, "aged 12-14")
-    drawing_OOSR_by_age(9, "aged 16-19")
-
+    #drawing_OOSR_by_age(5, "aged 5-11")
+    #drawing_OOSR_by_age(7, "aged 12-14")
+    #drawing_OOSR_by_age(9, "aged 16-19")
+    
+    #This will be code which draws countries with the highest and the lowest unemployment rate
+    highest_and_lowest_unemployment_rates()
