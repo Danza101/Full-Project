@@ -108,7 +108,6 @@ def checking_modules_installed():
     try:
         from assessment_code import pd
         from assessment_code import plt
-        from assessment_code import np
         return(True)
     except ImportError:
         return(False)
