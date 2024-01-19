@@ -209,7 +209,7 @@ class countries_unemployment_rate:
     def plot_extreme_unemployment_by_continent(self):
         
         if(self.plot_data == True):
-             extreme_unemployment = self.get_extreme_unemployment_by_continent()
+            extreme_unemployment = self.get_extreme_unemployment_by_continent()
 
         # Get unique list of continents
         continents = extreme_unemployment['Continent'].unique()
@@ -217,35 +217,37 @@ class countries_unemployment_rate:
         # Loop through continents and plot each one separately
         for continent in continents:
             # Filter data for the current continent
-            data = extreme_unemployment[extreme_unemployment['Continent'] == continent]
+            continent_data = self.data[self.data['Continent'] == continent]
+
+            # Find the country with the max unemployment rate
+            max_unemployment = continent_data['Unemployment_Rate'].max()
+            max_country = continent_data[continent_data['Unemployment_Rate'] == max_unemployment]['Countries and areas'].iloc[0]
+
+            # Find the country with the min non-zero unemployment rate
+            non_zero_min_data = continent_data[continent_data['Unemployment_Rate'] > 0]
+            if not non_zero_min_data.empty:
+                min_unemployment = non_zero_min_data['Unemployment_Rate'].min()
+                min_country = non_zero_min_data[non_zero_min_data['Unemployment_Rate'] == min_unemployment]['Countries and areas'].iloc[0]
+            else:
+                min_unemployment = None
+                min_country = "N/A"
 
             # Create a new figure for each continent
             plt.figure(figsize=(8, 4))
 
-            if data.iloc[0]['Min Unemployment Rate'] == 0:
-                # If min unemployment rate is 0, plot only the max
-                labels = ['Max Unemployment Country']
-                max_country = data.iloc[0]['Country_Max']
-                max_value = data.iloc[0]['Max Unemployment Rate']
-                values = [max_value]
-                color = ['red']
-                tick_label = [max_country]
-            else:
-                # Else plot both max and min
-                labels = ['Max Unemployment Country', 'Min Unemployment Country']
-                max_country = data.iloc[0]['Country_Max']
-                min_country = data.iloc[0]['Country_Min']
-                max_value = data.iloc[0]['Max Unemployment Rate']
-                min_value = data.iloc[0]['Min Unemployment Rate']
-                values = [max_value, min_value]
-                color = ['red', 'green']
-                tick_label = [max_country, min_country]
-
             # Plot the bar chart
-            plt.bar(labels, values, color=color, tick_label=tick_label)
+            labels = ['Max Unemployment Country', 'Min Unemployment Country']
+            values = [max_unemployment, min_unemployment if min_unemployment else 0]
+            bars = plt.bar(labels, values, color=['red', 'green'])
             plt.title(f"{continent} - Unemployment Rates")
             plt.ylabel("Unemployment Rate (%)")
+            plt.xticks(labels, [max_country, min_country])
             plt.ylim(0, max(values) + 5)  # Set y-axis limit to add some space at the top
+
+            # Adding the text on top of the bars
+            for bar in bars:
+                yval = bar.get_height()
+                plt.text(bar.get_x() + bar.get_width()/2, yval, round(yval, 2), ha='center', va='bottom')
 
             # Display each plot
             plt.show()
