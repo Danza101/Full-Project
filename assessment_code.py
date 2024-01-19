@@ -2,7 +2,6 @@
 import pycountry_convert as pc
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 import warnings
 import geopandas as gpd
 import contextily as ctx
@@ -257,12 +256,12 @@ class countries_unemployment_rate:
 if __name__ == "__main__":
 
     #First graph of the world map
-    #get_world_map()
+    get_world_map()
     
     # Now, you can call the function with specific parameters for each age group
-    #drawing_OOSR_by_age(5, "aged 5-11")
-    #drawing_OOSR_by_age(7, "aged 12-14")
-    #drawing_OOSR_by_age(9, "aged 16-19")
+    drawing_OOSR_by_age(5, "aged 5-11")
+    drawing_OOSR_by_age(7, "aged 12-14")
+    drawing_OOSR_by_age(9, "aged 16-19")
     
     #This will be code which draws countries with the highest and the lowest unemployment rate
     highest_and_lowest_unemployment_rates()
