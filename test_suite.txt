@@ -1,1 +1,5 @@
 1. Testing that i have imported the correct file to my testing file
+2. Testing that each country has gone to the correct continent
+3. Testing my getting_the_world_map class logic works by using dummy data
+4. Testing the data type of key variables are correct
+5. Testing the file location is correct

@@ -3,8 +3,11 @@ import pandas as pd
 import awoc 
 import unittest as test
 import assessment_code as ac
+from assessment_code import getting_the_world_map
 
-
+def test_average_continents():
+    return {'Africa': 4.775, 'Asia': 3.2133333333333334, 'Europe': 7.118, 'North America': 7.166666666666667, 'Oceania': 2.12, 'South America': 3.69}
+    
 #Checks the dictionary produces the correct ans
 def testing_manipulating_data_func_in_ac_file(test_ans , actual_ans):
     if(test_ans == actual_ans):
@@ -168,12 +171,51 @@ class TestGraphs(test.TestCase):
         proxy_file_df = pd.DataFrame(self.proxy_file[1:], columns=self.proxy_file[0])  # Convert to DataFrame if it's a list
         self.assertEqual(True, test_calc(proxy_file_df))
 
+#Requirements 3: Testing my getting_the_world_map class logic works by using dummy data
+class Test_World_Map(test.TestCase):
+     
+    def test_values_in_map(self):
+        
+        #Instantiating class
+        class_to_access = getting_the_world_map(False)
+        
+        #This gets the continents. We have already unit tested this method so i can now use it to change the dummy data country to continent
+        continents_series = pd.Series([ac.converting_country_to_continent(country[0]) for country in getting_the_proxy_file()[1:]])
+        
+        #Getting the unemployment rate
+        unemployment_rates_series = pd.Series([row[3] for row in getting_the_proxy_file()[1:]])
+        
+        unemployment_dict = class_to_access.manipulating_the_data(continents_series, unemployment_rates_series)
+                            
+        #Checking the values are the expected values
+        self.assertEqual(unemployment_dict, test_average_continents())
 
+#Requirement 4: Checking the files 
+class Test_file(test.TestCase):
+    
+    def setUp(self):
+        # Common setup for each test method in this class
+        self.country, self.unemployment, self.continents, self.data = getting_the_data_from_assessment_code_file()
+    
+    #This checks the data is correct datatype    
+    def test_file_type(self):
+        self.assertEqual(type(self.data), pd.DataFrame)
+        self.assertEqual(type(self.continents), pd.Series)
+        self.assertEqual(type(self.unemployment), pd.Series)
+        self.assertEqual(type(self.country), pd.Series)
+
+    #This checks that the files opened are the correct one
+    def test_correct_folder(self):
+        expected_df = pd.read_csv("Global_Education.csv", encoding='ISO-8859-1')
+
+        # Check if both DataFrames have the same columns in the same order
+        self.assertListEqual(list(self.data.columns), list(expected_df.columns))
+
+        #Check if the values are the same (and ignore the index)
+        self.assertTrue(self.data.equals(expected_df))
 
         
         
-
-
 if __name__ == '__main__':
     #Checking the continent
     test.main()
